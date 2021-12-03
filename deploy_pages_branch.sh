@@ -5,10 +5,13 @@
 set -e
 
 # Which branch?
-# REPONAME="$(echo $GITHUB_REPOSITORY| cut -d'/' -f 2)"
 REPONAME=${CI_PROJECT_NAME}
-# OWNER="$(echo $GITHUB_REPOSITORY| cut -d'/' -f 1)"
-INPUT_BUILD_DIR="public"
+
+# Which directory to artifacts
+if [ -z "$INPUT_BUILD_DIR" ]; then
+  INPUT_BUILD_DIR="public"
+fi
+
 # GHIO="${OWNER}.github.io"
 # if [[ "$REPONAME" == "$GHIO" ]]; then
 #   TARGET_BRANCH="master"
@@ -18,6 +21,10 @@ TARGET_BRANCH="gh-pages"
 # Custom branch in global variables : INPUT_BRANCH
 if [ ! -z "$INPUT_BRANCH" ]; then
   TARGET_BRANCH=$INPUT_BRANCH
+fi
+# By branch or all directory is the website
+if [ -z "$SITE_BY_BRANCH" ]; then
+  SITE_BY_BRANCH="FALSE"
 fi
 
 # echo "### Started deploy to $GITHUB_REPOSITORY/$TARGET_BRANCH"
@@ -31,6 +38,7 @@ echo "- CI_PROJECT_PATH: $CI_PROJECT_PATH"
 echo "- CI_SERVER_HOST: $CI_SERVER_HOST"
 echo "- CI_COMMIT_BRANCH: $CI_COMMIT_BRANCH"
 echo "- SITE_BY_BRANCH: $SITE_BY_BRANCH"
+echo "- INPUT_BUILD_DIR: $INPUT_BUILD_DIR"
 # echo "- cname: $INPUT_CNAME"
 # echo "- Jekyll: $INPUT_JEKYLL"
 
@@ -71,17 +79,18 @@ cd $HOME/branch/
 # Sync repository with build_dir
 cp -R $TARGET_BRANCH/.git $HOME/build/$BUILD_DIR/.git
 
-if [[ "$SITE_BY_BRANCH" == "true" || "$SITE_BY_BRANCH" == "TRUE" ]]; then
-  # site in dedicated directory
-  rm -rf $TARGET_BRANCH/$CI_COMMIT_BRANCH
-  rm -rf $TARGET_BRANCH/.git
-  rm -rf $TARGET_BRANCH/.gitlab-ci.yml
-  rm -rf $TARGET_BRANCH/.nojekyll
-  mkdir $TARGET_BRANCH/$CI_COMMIT_BRANCH
+if [[ $SITE_BY_BRANCH == "true" || $SITE_BY_BRANCH == "TRUE" ]]; then
+  # site in dedicated directory in "public"
+  rm -rf $TARGET_BRANCH/$INPUT_BUILD_DIR/$CI_COMMIT_BRANCH
+  rm -rf $TARGET_BRANCH/.??*
+  mkdir $TARGET_BRANCH/$INPUT_BUILD_DIR/$CI_COMMIT_BRANCH
   echo "Clean directory '$CI_COMMIT_BRANCH' only and git stuff"
 else
   # site at the root directory
+  # rm -rf $TARGET_BRANCH/$INPUT_BUILD_DIR/*
   rm -rf $TARGET_BRANCH/*
+  rm -rf $TARGET_BRANCH/.??*
+  mkdir $TARGET_BRANCH/$INPUT_BUILD_DIR
   echo "Removed all files"
 fi
 
@@ -90,13 +99,26 @@ cp -R $HOME/build/$BUILD_DIR/.git $TARGET_BRANCH/.git
 # Copy gitlab-ci.yml
 cp $HOME/build/.gitlab-ci.yml $TARGET_BRANCH/
 
-if [[ "$SITE_BY_BRANCH" == "true" || "$SITE_BY_BRANCH" == "TRUE" ]]; then
+if [[ $SITE_BY_BRANCH == "true" || $SITE_BY_BRANCH == "TRUE" ]]; then
   # Copy files
-  cd $HOME/branch/$TARGET_BRANCH/$CI_COMMIT_BRANCH
+  cd $HOME/branch/$TARGET_BRANCH/$INPUT_BUILD_DIR/$CI_COMMIT_BRANCH
+  # Create home page index.html in public
+INDEX=`ls -1 $HOME/branch/$TARGET_BRANCH/$INPUT_BUILD_DIR | sed "s/^.*/      <li\>\<a\ href=\"&\"\>&\<\\/a\>\<\\/li\>/"`
+echo "<html>
+  <head><title>Index of branch directories</title></head>
+  <body>
+    <h2>Index of branch directories</h2>
+    <hr>
+    <ui>
+$INDEX
+    <ui>
+  </body>
+</html>" > $HOME/branch/$TARGET_BRANCH/$INPUT_BUILD_DIR/index.html
+
 else
   # Copy files
   # cd $TARGET_BRANCH/$INPUT_BUILD_DIR
-  cd $HOME/branch/$TARGET_BRANCH
+  cd $HOME/branch/$TARGET_BRANCH/$INPUT_BUILD_DIR
 fi
 
 cp -Rf $HOME/build/$BUILD_DIR/* .
