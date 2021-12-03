@@ -27,7 +27,7 @@ Also think about using `except: gh-pages` in your other stages because no file i
 If you use the environment variable :
 ```yaml
 variables:
-  SITE_BY_BRANCH=TRUE
+  SITE_BY_BRANCH: "TRUE"
 ```
 
 The 'gh-pages' branch will keep site content of other published branches in a dedicated subdirectory.  
