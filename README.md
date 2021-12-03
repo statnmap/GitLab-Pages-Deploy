@@ -22,6 +22,16 @@ pages:
 
 Also think about using `except: gh-pages` in your other stages because no file is available for this branch.
 
+## Create your token to allow push
+
+Create New project token
+![image](https://user-images.githubusercontent.com/21193866/144649526-59017727-a804-48c0-934c-8306d2059f36.png)
+
+Add token in the CI/CD variables as `PROJECT_ACCESS_TOKEN`
+![image](https://user-images.githubusercontent.com/21193866/144649687-d18ce555-827e-44ad-82e8-dfb7f3966bec.png)
+
+
+
 ## Publish one site for each branch
 
 If you use the environment variable :
