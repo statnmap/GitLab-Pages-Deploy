@@ -15,7 +15,9 @@ pages:
         - echo "deploy"
     artifacts:
         paths:
-            - public
+            - "."
     only:
         - gh-pages
 ```
+
+Also think about using `except: gh-pages` in your other stages because no file is available for this branch.
