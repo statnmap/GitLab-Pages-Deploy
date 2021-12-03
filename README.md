@@ -21,3 +21,24 @@ pages:
 ```
 
 Also think about using `except: gh-pages` in your other stages because no file is available for this branch.
+
+## Publish one site for each branch
+
+If you use the environment variable :
+```yaml
+variables:
+  SITE_BY_BRANCH=TRUE
+```
+
+The 'gh-pages' branch will keep site content of other published branches in a dedicated subdirectory.  
+This will then create an index file at the root of your website to let you choose which version you want to see.
+
+```html
+<h2>Index of branch directories</h2>
+
+- index.html
+- master
+- production
+- validation
+- other-branch
+```
