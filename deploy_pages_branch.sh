@@ -29,6 +29,8 @@ echo "- build_dir: $INPUT_BUILD_DIR"
 echo "- CI_SERVER_HOST: $CI_SERVER_HOST"
 echo "- CI_PROJECT_PATH: $CI_PROJECT_PATH"
 echo "- CI_SERVER_HOST: $CI_SERVER_HOST"
+echo "- CI_COMMIT_BRANCH: $CI_COMMIT_BRANCH"
+echo "- SITE_BY_BRANCH: $SITE_BY_BRANCH"
 # echo "- cname: $INPUT_CNAME"
 # echo "- Jekyll: $INPUT_JEKYLL"
 
@@ -37,6 +39,9 @@ BUILD_DIR=$INPUT_BUILD_DIR
 BUILD_DIR=${BUILD_DIR%/} # remove the ending slash if exists
 mkdir -p $HOME/build/$BUILD_DIR
 cp -R $BUILD_DIR/* $HOME/build/$BUILD_DIR/
+# Retrieve gitlab-ci.yml in build
+cp .gitlab-ci.yml $HOME/build
+
 
 # Create or clone the gh-pages repo in a subdirectory named branch
 mkdir -p $HOME/branch/
@@ -44,10 +49,6 @@ cd $HOME/branch/
 git config --global user.name "$GITLAB_USER_LOGIN"
 git config --global user.email "$GITLAB_USER_EMAIL"
 
-
-# git ls-remote --heads https://gitlab-ci-token:${CI_JOB_TOKEN}@${CI_SERVER_HOST}/${CI_PROJECT_PATH}.git ${TARGET_BRANCH}
-
-# if [ -z "$(git ls-remote --heads https://${GITHUB_ACTOR}:${CI_JOB_TOKEN}@github.com/${GITHUB_REPOSITORY}.git ${TARGET_BRANCH})" ]; then
 if [ -z "$(git ls-remote --heads https://gitlab-ci-token:${CI_JOB_TOKEN}@${CI_SERVER_HOST}/${CI_PROJECT_PATH}.git ${TARGET_BRANCH})" ]; then
   echo "Create branch '${TARGET_BRANCH}'"
   git clone --quiet https://gitlab-ci-token:${CI_JOB_TOKEN}@${CI_SERVER_HOST}/${CI_PROJECT_PATH}.git ${TARGET_BRANCH} > /dev/null
@@ -66,14 +67,38 @@ else
 fi
 
 
+cd $HOME/branch/
 # Sync repository with build_dir
 cp -R $TARGET_BRANCH/.git $HOME/build/$BUILD_DIR/.git
-rm -rf $TARGET_BRANCH/*
-# Store in "public" inside the branch
-mkdir $TARGET_BRANCH/$INPUT_BUILD_DIR
+
+if [[ "$SITE_BY_BRANCH" == "true" || "$SITE_BY_BRANCH" == "TRUE" ]]; then
+  # site in dedicated directory
+  rm -rf $TARGET_BRANCH/$CI_COMMIT_BRANCH
+  rm -rf $TARGET_BRANCH/.git
+  rm -rf $TARGET_BRANCH/.gitlab-ci.yml
+  rm -rf $TARGET_BRANCH/.nojekyll
+  mkdir $TARGET_BRANCH/$CI_COMMIT_BRANCH
+  echo "Clean directory '$CI_COMMIT_BRANCH' only and git stuff"
+else
+  # site at the root directory
+  rm -rf $TARGET_BRANCH/*
+  echo "Removed all files"
+fi
+
+# Set git stuff
 cp -R $HOME/build/$BUILD_DIR/.git $TARGET_BRANCH/.git
-# Copy files
-cd $TARGET_BRANCH/$INPUT_BUILD_DIR
+# Copy gitlab-ci.yml
+cp $HOME/build/.gitlab-ci.yml $TARGET_BRANCH/
+
+if [[ "$SITE_BY_BRANCH" == "true" || "$SITE_BY_BRANCH" == "TRUE" ]]; then
+  # Copy files
+  cd $HOME/branch/$TARGET_BRANCH/$CI_COMMIT_BRANCH
+else
+  # Copy files
+  # cd $TARGET_BRANCH/$INPUT_BUILD_DIR
+  cd $HOME/branch/$TARGET_BRANCH
+fi
+
 cp -Rf $HOME/build/$BUILD_DIR/* .
 
 # Custom domain
@@ -89,10 +114,11 @@ fi
 
 # .nojekyll
 if [ "$INPUT_JEKYLL" != "yes" ]; then
-  touch .nojekyll
+  touch $HOME/branch/$TARGET_BRANCH/.nojekyll
 fi
 
 # Deploy/Push (or not?)
+cd $HOME/branch/$TARGET_BRANCH
 if [ -z "$(git status --porcelain)" ]; then
   result="Nothing to deploy"
 else
