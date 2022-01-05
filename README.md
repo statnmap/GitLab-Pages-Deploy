@@ -57,6 +57,7 @@ Also think about using `except: gh-pages` in your other stages because no file i
 - Add variable
 - Fill key with `PROJECT_ACCESS_TOKEN`
 - Fill the token with the one you saved above
+- Mask variable but you can uncheck Protect variable
 - Add variable
 
 <img src="https://user-images.githubusercontent.com/21193866/144649687-d18ce555-827e-44ad-82e8-dfb7f3966bec.png" alt="PROJECT_ACCESS_TOKEN" width="600"/>
