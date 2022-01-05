@@ -43,7 +43,8 @@ Also think about using `except: gh-pages` in your other stages because no file i
 ### Create New project token  
 
 - Go to: Settings > Access Token
-- Create a token named `PROJECT_ACCESS_TOKEN`
+  - If it is not activated, use a personal access token: https://gitlab.com/-/profile/personal_access_tokens
+- Choose a proper name to recognize it when you'll want to revoke it
 - Check access: read_repository and write_repository
 - Save your token, you will only see it once
 
