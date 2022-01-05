@@ -136,7 +136,7 @@ cp -Rf $HOME/build/$BUILD_DIR/* .
 # Custom commit message
 if [ -z "$INPUT_COMMIT_MESSAGE" ]
 then
-  INPUT_COMMIT_MESSAGE="$GITLAB_USER_LOGIN published a site update"
+  INPUT_COMMIT_MESSAGE="$GITLAB_USER_LOGIN published a site update for branch: $CI_COMMIT_BRANCH"
 fi
 
 # .nojekyll
