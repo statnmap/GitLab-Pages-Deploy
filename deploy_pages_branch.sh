@@ -88,14 +88,14 @@ if [[ $SITE_BY_BRANCH == "true" || $SITE_BY_BRANCH == "TRUE" ]]; then
   # site in dedicated directory in "public"
   rm -rf $TARGET_BRANCH/$INPUT_BUILD_DIR/$CI_COMMIT_BRANCH
   rm -rf $TARGET_BRANCH/.??*
-  mkdir $TARGET_BRANCH/$INPUT_BUILD_DIR/$CI_COMMIT_BRANCH
+  mkdir -p $TARGET_BRANCH/$INPUT_BUILD_DIR/$CI_COMMIT_BRANCH
   echo "Clean directory '$CI_COMMIT_BRANCH' only and git stuff"
 else
   # site at the root directory
   # rm -rf $TARGET_BRANCH/$INPUT_BUILD_DIR/*
   rm -rf $TARGET_BRANCH/*
   rm -rf $TARGET_BRANCH/.??*
-  mkdir $TARGET_BRANCH/$INPUT_BUILD_DIR
+  mkdir -p $TARGET_BRANCH/$INPUT_BUILD_DIR
   echo "Removed all files"
 fi
 
