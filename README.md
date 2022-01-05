@@ -43,6 +43,7 @@ Also think about using `except: gh-pages` in your other stages because no file i
 ### Create New project token  
 
 - Go to: Settings > Access Token
+- Create a token named `PROJECT_ACCESS_TOKEN`
 - Check access: read_repository and write_repository
 - Save your token, you will only see it once
 
