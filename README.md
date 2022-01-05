@@ -49,6 +49,14 @@ Also think about using `except: gh-pages` in your other stages because no file i
 <img src="https://user-images.githubusercontent.com/21193866/144649526-59017727-a804-48c0-934c-8306d2059f36.png" alt="drawing" width="600"/>
 
 ### Add token in the CI/CD variables as `PROJECT_ACCESS_TOKEN`
+
+- Go to: Settings > CI/CD > Variables
+- Expand the section
+- Add variable
+- Fill key with `PROJECT_ACCESS_TOKEN`
+- Fill the token with the one you saved above
+- Add variable
+
 <img src="https://user-images.githubusercontent.com/21193866/144649687-d18ce555-827e-44ad-82e8-dfb7f3966bec.png" alt="PROJECT_ACCESS_TOKEN" width="600"/>
 
 
