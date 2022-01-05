@@ -41,6 +41,11 @@ Also think about using `except: gh-pages` in your other stages because no file i
 ## Create your token to allow push
 
 ### Create New project token  
+
+- Go to: Settings > Access Token
+- Check access: read_repository and write_repository
+- Save your token, you will only see it once
+
 <img src="https://user-images.githubusercontent.com/21193866/144649526-59017727-a804-48c0-934c-8306d2059f36.png" alt="drawing" width="600"/>
 
 ### Add token in the CI/CD variables as `PROJECT_ACCESS_TOKEN`
