@@ -9,6 +9,11 @@ It allows to keep track of modifications between to publications
 
 Also, if you want to be able to render the website for some specific branches, without deleting the 'main' one, you can use sub-website build. See [Publish one sub-website for each branch](https://github.com/statnmap/GitLab-Pages-Deploy#publish-one-site-for-each-branch)
 
+## Demo
+
+You can find repository with a demo for this script: https://gitlab.com/statnmap/gitlab-pages-demo/-/blob/main/README.md  
+You'll see Pages with sub-folders of the HTML output for each branch that is worth it.  
+
 ## Prepare the "gitlab-ci.yml"
 On GitLab, you can choose to publish the "gh-pages" branch instead of the public artifacts using this in the ".gitlab-ci.yml":
 
