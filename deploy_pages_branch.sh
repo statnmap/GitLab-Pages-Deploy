@@ -13,7 +13,7 @@ if [ -z "$INPUT_BUILD_DIR" ]; then
 fi
 
 if [ -z "$PROJECT_ACCESS_TOKEN" ]; then
-  echo "Create a project token with write access first: PROJECT_ACCESS_TOKEN."
+  echo "Create a project token with write access first: PROJECT_ACCESS_TOKEN. See https://github.com/statnmap/GitLab-Pages-Deploy for more information."
   exit 1
 fi
 
