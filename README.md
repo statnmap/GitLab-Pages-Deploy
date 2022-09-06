@@ -50,6 +50,7 @@ Also think about using `except: gh-pages` in your other stages because no file i
 - Go to: Settings > Access Token
   - If it is not activated, use a personal access token: https://gitlab.com/-/profile/personal_access_tokens
 - Choose a proper name to recognize it when you'll want to revoke it
+- Choose role as "Developer"
 - Check access: read_repository and write_repository
 - Save your token, you will only see it once
 
